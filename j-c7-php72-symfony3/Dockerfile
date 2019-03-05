@@ -1,4 +1,3 @@
 FROM jakala/j-c7-php72:latest
 MAINTAINER noc@jakala.com
 COPY files/00-default.vh /etc/httpd/vhost.d/
-RUN echo andrea
