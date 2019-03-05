@@ -5,6 +5,5 @@ RUN yum -y install https://$(rpm -E '%{?centos:centos}%{!?centos:rhel}%{rhel}').
 	yum clean all
 COPY etc /etc/
 COPY DATA/ /DATA/
-RUN echo andrea
 ADD apachectl.sh /
 CMD ["/apachectl.sh"]
