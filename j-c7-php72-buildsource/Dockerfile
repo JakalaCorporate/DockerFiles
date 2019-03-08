@@ -4,4 +4,4 @@ RUN curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum
 RUN yum install -y ant wget php72u-cli php72u-pecl-memcached git yarn
 VOLUME /mnt
 WORKDIR /mnt
-CMD /bin/ant 
+CMD /bin/ant build
