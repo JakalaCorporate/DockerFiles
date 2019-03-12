@@ -3,10 +3,11 @@
 
 	DocumentRoot "/DATA/sites/default/web"
 	<Directory /DATA/sites/default/web>
-		Options Includes FollowSymLinks
-		AllowOverride AuthConfig Limit FileInfo
-		DirectoryIndex index.html index.php
-		Require all granted
+                Options FollowSymLinks 
+                AllowOverride all
+                Order allow,deny
+                Allow from all
+                Require all granted
 	</Directory>
 
 	CustomLog "/DATA/logs/apache/default.access_log"	jakala		env=!forwarded
