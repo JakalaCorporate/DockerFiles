@@ -3,9 +3,10 @@
 
 	DocumentRoot "/DATA/sites/default"
 	<Directory /DATA/sites/default>
-                Options Includes FollowSymLinks
-                AllowOverride AuthConfig Limit FileInfo
-                DirectoryIndex index.html index.php
+                Options FollowSymLinks 
+                AllowOverride all
+                Order allow,deny
+                Allow from all
                 Require all granted
 	</Directory>
 
