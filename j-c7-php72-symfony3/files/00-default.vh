@@ -1,7 +1,7 @@
 <VirtualHost *:80>
 	ServerName default:80
 
-	DocumentRoot "/DATA/sites/defaulti/web"
+	DocumentRoot "/DATA/sites/default/web"
 	<Directory /DATA/sites/default/web>
 		Options Includes FollowSymLinks
 		AllowOverride AuthConfig Limit FileInfo
