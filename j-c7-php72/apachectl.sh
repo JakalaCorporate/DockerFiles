@@ -3,5 +3,6 @@
 # context after restarting the container.  httpd won't start correctly
 # if it thinks it is already running.
 rm -rf /run/httpd/* /tmp/httpd*
-[ ! -z $CFG_SCRIPT ] && $CFG_SCRIPT 
+[ ! -z $CFG_SCRIPT ] && $CFG_SCRIPT
+/usr/bin/filebeat &
 exec /usr/sbin/apachectl -DFOREGROUND
