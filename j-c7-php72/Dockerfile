@@ -8,4 +8,5 @@ RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.
 COPY etc /etc/
 COPY DATA/ /DATA/
 ADD apachectl.sh /
+COPY etc/filebeat/filebeat.yml /etc/filebeat/filebeat.yml 
 CMD ["/apachectl.sh"]
