@@ -12,9 +12,8 @@
 
 	CustomLog "/DATA/logs/apache/default.access_log"	jakala		env=!forwarded
 	CustomLog "/DATA/logs/apache/default.access_log"	jakalaXFW	env=forwarded
-	ErrorLog  "/DATA/logs/apache/default.error_log"
 	
 	CustomLog "/dev/stdout"	jakala		env=!forwarded
 	CustomLog "/dev/stdout"	jakalaXFW	env=forwarded
-	ErrorLog "/dev/stderr"
+	ErrorLog "|/usr/bin/tee -a /DATA/logs/apache/default.error_log /dev/stdout"
 </VirtualHost>
