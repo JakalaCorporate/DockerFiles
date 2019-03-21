@@ -4,5 +4,5 @@
 # if it thinks it is already running.
 rm -rf /run/httpd/* /tmp/httpd*
 [ ! -z $CFG_SCRIPT ] && $CFG_SCRIPT
-/usr/bin/filebeat &
+/usr/share/filebeat/bin/filebeat -c /etc/filebeat/filebeat.yml -path.home /usr/share/filebeat -path.config /etc/filebeat -path.data /var/lib/filebeat -path.logs /var/log/filebeat &
 exec /usr/sbin/apachectl -DFOREGROUND
