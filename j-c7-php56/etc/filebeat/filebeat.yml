@@ -20,12 +20,7 @@ filebeat.prospectors:
     - /DATA/sites/*/var/logs/prod.json
     - /DATA/sites/*/app/logs/prod.json
   document_type: php-${ENV}
-  fields:
-    app: ${APP:none}
-    env: ${ENV:none}
-    server: ${SERVER:none}
-    farm: ${FARM:none}
-    enabled: true
+  enabled: true
 
 - input_type: log
   paths:
@@ -35,7 +30,7 @@ filebeat.prospectors:
     env: ${ENV:none}
     server: ${SERVER:none}
     farm: ${FARM:none}
-    enabled: true
+  enabled: true
 
 - input_type: log
   paths:
@@ -45,7 +40,7 @@ filebeat.prospectors:
     env: ${ENV:none}
     server: ${SERVER:none}
     farm: ${FARM:none}
-    enabled: true
+  enabled: true
 
 
   # matching any regular expression from the list.
