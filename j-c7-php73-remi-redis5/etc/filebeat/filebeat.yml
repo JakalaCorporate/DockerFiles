@@ -1,0 +1,196 @@
+###################### Filebeat Configuration Example #########################
+
+# This file is an example configuration file highlighting only the most common
+# options. The filebeat.full.yml file from the same directory contains all the
+# supported options with more comments. You can use it as a reference.
+#
+# You can find the full configuration reference here:
+# https://www.elastic.co/guide/en/beats/filebeat/index.html
+
+#=========================== Filebeat prospectors =============================
+
+filebeat.prospectors:
+
+# Each - is a prospector. Most options can be set at the prospector level, so
+# you can use different prospectors for various configurations.
+# Below are the prospector specific configurations.
+
+- input_type: log
+  paths:
+    - /DATA/sites/*/var/logs/prod.json
+    - /DATA/sites/*/app/logs/prod.json
+  document_type: php-${ENV}
+  enabled: true
+
+- input_type: log
+  paths:
+    - /DATA/logs/apache/default.access_log
+  document_type: apache-${ENV}
+  tags:
+    env: ${ENV:none}
+    server: ${SERVER:none}
+    farm: ${FARM:none}
+  enabled: true
+
+- input_type: log
+  paths:
+    - /DATA/logs/apache/default.error_log
+  document_type: apache-err-${ENV}
+  tags:
+    env: ${ENV:none}
+    server: ${SERVER:none}
+    farm: ${FARM:none}
+  enabled: true
+
+
+  # matching any regular expression from the list.
+  #exclude_lines: ["^DBG"]
+
+  # Include lines. A list of regular expressions to match. It exports the lines that are
+  # matching any regular expression from the list.
+  #include_lines: ["^ERR", "^WARN"]
+
+  # Exclude files. A list of regular expressions to match. Filebeat drops the files that
+  # are matching any regular expression from the list. By default, no files are dropped.
+  #exclude_files: [".gz$"]
+
+  # Optional additional fields. These field can be freely picked
+  # to add additional information to the crawled log files for filtering
+  #fields:
+  #  level: debug
+  #  review: 1
+
+  ### Multiline options
+
+  # Mutiline can be used for log messages spanning multiple lines. This is common
+  # for Java Stack Traces or C-Line Continuation
+
+  # The regexp Pattern that has to be matched. The example pattern matches all lines starting with [
+  #multiline.pattern: ^\[
+
+  # Defines if the pattern set under pattern should be negated or not. Default is false.
+  #multiline.negate: false
+
+  # Match can be set to "after" or "before". It is used to define if lines should be append to a pattern
+  # that was (not) matched before or after or as long as a pattern is not matched based on negate.
+  # Note: After is the equivalent to previous and before is the equivalent to to next in Logstash
+  #multiline.match: after
+
+
+#================================ General =====================================
+
+# The name of the shipper that publishes the network data. It can be used to group
+# all the transactions sent by a single shipper in the web interface.
+#name:
+
+# The tags of the shipper are included in their own field with each
+# transaction published.
+#tags: ["service-X", "web-tier"]
+
+# Optional fields that you can specify to add additional information to the
+# output.
+#fields:
+#  env: staging
+
+#================================ Outputs =====================================
+
+# Configure what outputs to use when sending the data collected by the beat.
+# Multiple outputs may be used.
+
+#----------------------------- Logstash output --------------------------------
+#output.logstash:
+  # The Logstash hosts
+#  hosts: ["ho-prd-logstash-01.sj.local:5044" , "ho-prd-logstash-02.sj.local:5044","ho-prd-logstash-03.sj.local:5044"]
+  #hosts: ["ho-prd-logstash-02.sj.local:5044"]
+#  worker: 3
+#  loadbalance: true
+#  index: filebeat
+#  bulk_max_size: 256
+
+  # Optional SSL. By default is off.
+  # List of root certificates for HTTPS server verifications
+  #ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
+
+  # Certificate for SSL client authentication
+  #ssl.certificate: "/etc/pki/client/cert.pem"
+
+  # Client Certificate Key
+  #ssl.key: "/etc/pki/client/cert.key"
+  #
+output.kafka:
+# initial brokers for reading cluster metadata
+  hosts: ["${AWS_KAFKA_HOSTS}"]
+#
+##     # message topic selection + partitioning
+  topic: default
+  topics:
+  - when.equals.type: "apache-prod"
+    topic: logs-beat-apache
+  - when.equals.type: "apache-stage"
+    topic: logs-beat-apache
+  - when.equals.type: "apache-uat"
+    topic: logs-beat-apache
+  - when.equals.type: "apache-qa"
+    topic: logs-beat-apache
+
+  - when.equals.type: "apache-err-prod"
+    topic: logs-beat-apache-err
+  - when.equals.type: "apache-err-stage"
+    topic: logs-beat-apache-err
+  - when.equals.type: "apache-err-uat"
+    topic: logs-beat-apache-err
+  - when.equals.type: "apache-err-qa"
+    topic: logs-beat-apache-err
+
+  - when.equals.type: "php-prod"
+    topic: logs-beat-php
+  - when.equals.type: "php-stage"
+    topic: logs-beat-php
+  - when.equals.type: "php-uat"
+    topic: logs-beat-php
+  - when.equals.type: "php-qa"
+    topic: logs-beat-php
+    
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: gzip
+  max_message_bytes: 1000000
+  bulk_max_size: 25
+
+
+#================================ Logging =====================================
+logging:
+
+  # Send all logging output to syslog. On Windows default is false, otherwise
+  # default is true.
+  #to_syslog: true
+
+  # Write all logging output to files. Beats automatically rotate files if rotateeverybytes
+  # limit is reached.
+  to_files: true
+
+  # To enable logging to files, to_files option has to be set to true
+  files:
+    # The directory where the log files will written to.
+    path: /var/log/mybeat
+
+    # The name of the files where the logs are written to.
+    name: mybeat
+
+    # Configure log file size limit. If limit is reached, log file will be
+    # automatically rotated
+    rotateeverybytes: 10485760 # = 10MB
+
+    # Number of rotated log files to keep. Oldest files will be deleted first.
+    keepfiles: 7
+
+  # Enable debug output for selected components. To enable all selectors use ["*"]
+  # Other available selectors are beat, publish, service
+  # Multiple selectors can be chained.
+  #selectors: [ ]
+
+  # Sets log level. The default log level is error.
+  # Available log levels are: critical, error, warning, info, debug
+  level: info
+
