@@ -11,4 +11,5 @@ COPY DATA/ /DATA/
 COPY php73/ /etc/opt/remi/php73/
 ADD apachectl.sh /
 COPY etc/filebeat/filebeat.yml /etc/filebeat/filebeat.yml 
+RUN chmod go-w /etc/filebeat/filebeat.yml 
 CMD [ "/apachectl.sh" ]
