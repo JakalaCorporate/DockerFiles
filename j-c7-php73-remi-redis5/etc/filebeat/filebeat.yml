@@ -119,7 +119,7 @@ filebeat.prospectors:
   #
 output.kafka:
 # initial brokers for reading cluster metadata
-  hosts: '${AWS_KAFKA_HOSTS}'
+  hosts: '${KAFKA_HOSTS}'
 #
 ##     # message topic selection + partitioning
   topic: default
