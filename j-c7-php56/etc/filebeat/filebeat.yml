@@ -130,12 +130,16 @@ output.kafka:
     topic: logs-beat-apache
   - when.equals.type: "apache-uat"
     topic: logs-beat-apache
+  - when.equals.type: "apache-qa"
+    topic: logs-beat-apache
 
   - when.equals.type: "apache-err-prod"
     topic: logs-beat-apache-err
   - when.equals.type: "apache-err-stage"
     topic: logs-beat-apache-err
   - when.equals.type: "apache-err-uat"
+    topic: logs-beat-apache-err
+  - when.equals.type: "apache-err-qa"
     topic: logs-beat-apache-err
 
   - when.equals.type: "php-prod"
@@ -144,7 +148,9 @@ output.kafka:
     topic: logs-beat-php
   - when.equals.type: "php-uat"
     topic: logs-beat-php
-
+  - when.equals.type: "php-qa"
+    topic: logs-beat-php
+    
   partition.round_robin:
     reachable_only: false
   required_acks: 1
